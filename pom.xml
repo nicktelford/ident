@@ -49,6 +49,7 @@
 
   <modules>
     <module>ident-core</module>
+    <module>ident-uuid</module>
   </modules>
 
   <dependencyManagement>
