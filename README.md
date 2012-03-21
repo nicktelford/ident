@@ -9,8 +9,8 @@ they shouldn't (like arithmetic operations on IDs, wtf?).
 
 The project consists of several modules:
 
-* ident-core - The core Identifier abstractions and basic Identifier types.
-* ident-uuid - A module for working with all kinds of UUIDs in a sane, 
+* `ident-core` - The core Identifier abstractions and basic Identifier types.
+* `ident-uuid` - A module for working with all kinds of UUIDs in a sane, 
   type-safe and useful way.
 
 More modules may be added to add support for other forms of IDs.
