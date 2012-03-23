@@ -1,14 +1,17 @@
 package net.nicktelford.ident.timing
 
-/** A high-resolution timer.
+/** High-resolution timer.
  *
- * Generates high-resolution timestamps for the current system time.
- *
- * Guarantees:
- *  - Precision: nanoseconds.
- *  - Accuracy: milliseconds.
- *  - Monotonicity; subsequent timestamps will be greater than or equal to all
+ * Computes high-resolution timestamps that are guaranteed to:
+ *  - have `nanosecond precision`.
+ *  - have `millisecond accuracy`.
+ *  - are `monotonic`; subsequent timestamps will be greater than or equal to all
  *    previous timestamps.
+ *
+ * While the accuracy is the same as `System.currentTimeMillis`, the additional
+ * precision, together with the monotonicity guarantee, reduce the probability
+ * that successive calls will yield the same timestamp; a useful property when
+ * generating time-derived identifiers.
  */
 object Time {
   // TODO: write tests to verify monotonicity, accuracy and precision guarantees
@@ -20,13 +23,8 @@ object Time {
   /** Fixed initial value of currentTimeMillis for computing time offsets. */
   private val initialTime = currentTimeMillis * 1000000
 
-  /** the current timestamp with nanosecond precision.*/
+  /** Current timestamp with nanosecond precision. */
   def currentTimeNanos: Long = {
     initialTime + (nanoTime - initialNanos)
-  }
-
-  /** the approximate drift between system time and this timer. */
-  def drift: Long = {
-    currentTimeNanos - (System.currentTimeMillis * 1000000)
   }
 }
