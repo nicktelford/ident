@@ -18,6 +18,35 @@ object TimeUUID extends UUIDFactory[TimeUUID] with RFC4122Factory {
   /** 100-ns offset of UNIX epoch from UUID epoch */
   private val EPOCH_OFFSET = 0x01B21DD213814000L
 
+  // TODO: extract somewhere more abstract
+  // TODO: write tests to verify monotonicity, accuracy and precision guarantees
+  /** Utility for computing high-precision monotonic timestamps. */
+  private object Time {
+    import System.{nanoTime,currentTimeMillis}
+
+    /** Fixed initial value of nanoTime for computing time offsets. */
+    private val initialNanos = nanoTime
+
+    /** Fixed initial value of currentTimeMillis for computing time offsets. */
+    private val initialTime = currentTimeMillis * 1000000
+
+    /** Gets the current timestamp with nanosecond precision.
+     *
+     * This method doesn't guarantee accuracy beyond milliseconds but does 
+     * guarantee monotonicity; subsequent timestamps will always be larger.
+     * 
+     * @return the current timestamp with nanosecond precision.
+     */
+    def currentTimeNanos: Long = {
+      initialTime + (nanoTime - initialNanos)
+    }
+
+    /** Calculates the approximate drift between system time and this timer. */
+    def drift: Long = {
+      currentTimeNanos - (System.currentTimeMillis * 1000000)
+    }
+  }
+
   /** Generates a UUID for a UNIX timestamp in arbitrary units. */
   def apply(timestamp: Long, unit: TimeUnit): TimeUUID = {
     TimeUUID((unit.toNanos(timestamp) / 100).toLong - TimeUUID.EPOCH_OFFSET)
@@ -32,7 +61,7 @@ object TimeUUID extends UUIDFactory[TimeUUID] with RFC4122Factory {
   
   /** Generates a TimeUUID derived from the current time. */
   def apply: TimeUUID = {
-    TimeUUID(System.nanoTime, TimeUnit.NANOSECONDS)
+    TimeUUID(Time.currentTimeNanos, TimeUnit.NANOSECONDS)
   }
 }
 
