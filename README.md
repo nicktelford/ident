@@ -15,6 +15,9 @@ The project consists of several modules:
 
 More modules may be added to add support for other forms of IDs.
 
+NOTE: The license for this project is the Apache Software License version 2.0.
+LICENSE file to be added shortly.
+
 Requirements
 ------------
 
