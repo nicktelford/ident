@@ -15,8 +15,11 @@ package net.nicktelford.ident.timing
  */
 object Time {
   // TODO: write tests to verify monotonicity, accuracy and precision guarantees
+
   import System.{nanoTime,currentTimeMillis}
 
+  // TODO: handle negative nanoTime results, perhaps wrap nanoTime calls?
+  // TODO: handle nanoTime wrap-around
   /** Fixed initial value of nanoTime for computing time offsets. */
   private val initialNanos = nanoTime
 
