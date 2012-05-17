@@ -3,6 +3,7 @@ package net.nicktelford.ident.uuid.rfc4122
 import java.util.concurrent.TimeUnit
 import net.nicktelford.ident.timing.Time
 import net.nicktelford.ident.uuid._
+import util.Random
 
 /** Companion object for generating TimeUUIDs. */
 object TimeUUID extends UUIDFactory[TimeUUID] with RFC4122Factory {
@@ -21,19 +22,29 @@ object TimeUUID extends UUIDFactory[TimeUUID] with RFC4122Factory {
 
   /** Generates a UUID for a UNIX timestamp in arbitrary units. */
   def apply(timestamp: Long, unit: TimeUnit): TimeUUID = {
-    TimeUUID((unit.toNanos(timestamp) / 100).toLong - TimeUUID.EPOCH_OFFSET)
+    // TODO: use real clock sequence and node
+    // TODO: process ID for clock sequence?
+    TimeUUID(timestamp, unit, Random.nextInt, Random.nextLong)
+  }
+  
+  /** Generates a UUID for a UNIX timestamp in arbitrary units. */
+  def apply(timestamp: Long, unit: TimeUnit, clock: Int, node: Long): TimeUUID = {
+    TimeUUID(
+      (unit.toNanos(timestamp) / 100).toLong - TimeUUID.EPOCH_OFFSET,
+      clock,
+      node
+    )
   }
   
   /** Generates a UUID for a UUID timestamp. */
-  def apply(nanos: Long): TimeUUID = {
-    // TODO: compute LSB from a real clock sequence and node address
-    // TODO: idea: use current process ID (PID) for clock sequence?
-    TimeUUID(encodeMSB(nanos), randomLSB)
+  def apply(nanos: Long, clock: Int, node: Long): TimeUUID = {
+    TimeUUID(encodeMSB(nanos), encodeLSB(clock, node))
   }
   
   /** Generates a TimeUUID derived from the current time. */
   def apply: TimeUUID = {
-    TimeUUID(Time.currentTimeNanos, TimeUnit.NANOSECONDS)
+    // TODO: replace with finer-grained clock
+    TimeUUID(System.currentTimeMillis, TimeUnit.NANOSECONDS)
   }
 }
 
