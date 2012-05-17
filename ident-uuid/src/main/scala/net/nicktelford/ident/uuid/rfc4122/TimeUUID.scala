@@ -41,7 +41,7 @@ object TimeUUID extends UUIDFactory[TimeUUID] with RFC4122Factory {
   }
   
   /** Generates a TimeUUID derived from the current time. */
-  def apply: TimeUUID = {
+  def apply(): TimeUUID = {
     // TODO: replace with finer-grained clock
     TimeUUID(System.currentTimeMillis, TimeUnit.NANOSECONDS)
   }
