@@ -1,7 +1,6 @@
 package net.nicktelford.ident.uuid.rfc4122
 
 import java.util.concurrent.TimeUnit
-import net.nicktelford.ident.timing.Time
 import net.nicktelford.ident.uuid._
 import util.Random
 
