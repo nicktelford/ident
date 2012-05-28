@@ -37,14 +37,29 @@ trait RFC4122 {
 }
 
 /** Base trait for factory objects that generate RFC4122 compliant UUIDs. */
-trait RFC4122Factory {
-  self: UUIDFactory[_ <: RFC4122] =>
+trait RFC4122Factory[A <: UUID with RFC4122] extends UUIDFactory[A] {
 
   /** UUID version this Factory generates. */
   def version: Short
 
   /** UUID variant this Factory generates. */
   def variant: Variant = Variant.RFC
+
+  /** @see UUIDFactory.apply(msb: Long, lsb: Long) */
+  def from(msb: Long, lsb: Long): Option[A] = {
+    if (((lsb >>> 60) & variant.mask) == variant.value) {
+      if (((msb & 0xF0) >>> 4) == version) {
+        Some(apply(msb, lsb))
+      } else {
+        None
+      }
+    } else {
+      None
+    }
+  }
+
+  /** Creates a UUID from a trusted set of MSB and LSB */
+  def apply(msb: Long, lsb: Long): A
 
   /** Encodes the input bits with the version and swaps octets accordingly. */
   protected def encodeMSB(bits: Long): Long = {
