@@ -50,6 +50,7 @@
   <modules>
     <module>ident-core</module>
     <module>ident-uuid</module>
+    <module>ident-java</module>
   </modules>
 
   <dependencyManagement>
