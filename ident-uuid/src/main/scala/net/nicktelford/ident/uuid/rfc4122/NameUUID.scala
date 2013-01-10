@@ -30,13 +30,13 @@ object NameUUID {
 
   /** Factory for NameUUIDs. */
   class NameUUIDFactory private[NameUUID] (scheme: Scheme)
-    extends UUIDFactory[NameUUID] with RFC4122Factory {
+    extends RFC4122Factory[NameUUID] {
 
     /** @see UUIDFactory.MaxValue */
-    val MaxValue: NameUUID = NameUUID(encodeMSB(-1), encodeLSB(-1, -1), scheme)
+    val MaxValue: NameUUID = new NameUUID(encodeMSB(-1), encodeLSB(-1, -1), scheme)
 
     /** @see UUIDFactory.MinValue */
-    val MinValue: NameUUID = NameUUID(encodeMSB(0), encodeLSB(0, 0), scheme)
+    val MinValue: NameUUID = new NameUUID(encodeMSB(0), encodeLSB(0, 0), scheme)
 
     /** @see RFC4122.version */
     val version: Short = scheme.version
@@ -52,6 +52,10 @@ object NameUUID {
       val msb = encodeMSB(timestampBits)
       val lsb = encodeLSB(clockBits, nodeBits)
 
+      new NameUUID(msb, lsb, scheme)
+    }
+
+    def apply(msb: Long, lsb: Long): NameUUID = {
       NameUUID(msb, lsb, scheme)
     }
 

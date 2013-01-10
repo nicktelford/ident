@@ -3,19 +3,19 @@ package net.nicktelford.ident.uuid.rfc4122
 import net.nicktelford.ident.uuid._
 
 /** Companion object for generating RandomUUIDs. */
-object RandomUUID extends UUIDFactory[RandomUUID] with RFC4122Factory {
+object RandomUUID extends RFC4122Factory[RandomUUID] {
 
   /** @see UUIDFactory.MaxValue */
-  val MaxValue: RandomUUID = RandomUUID(encodeMSB(-1L), encodeLSB(-1, -1))
+  val MaxValue: RandomUUID = new RandomUUID(encodeMSB(-1L), encodeLSB(-1, -1))
 
   /** @see UUIDFactory.MinValue */
-  val MinValue: RandomUUID = RandomUUID(encodeMSB(0), encodeLSB(0, 0))
+  val MinValue: RandomUUID = new RandomUUID(encodeMSB(0), encodeLSB(0, 0))
 
   /** @see RFC4122Factory.version */
   val version: Short = 4
 
   /** Generates a RandomUUID */
-  def apply: RandomUUID = RandomUUID(randomMSB, randomLSB)
+  def apply(): RandomUUID = new RandomUUID(randomMSB, randomLSB)
 }
 
 /** A Version 4, randomly generated UUID. */
