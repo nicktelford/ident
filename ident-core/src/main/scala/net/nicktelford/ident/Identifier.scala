@@ -5,10 +5,10 @@ import java.util.Arrays
 /** Base trait for all identifiers */
 trait Identifier[A <: Identifier[A]] {
 
-  /** A binary representation of the Identifier. */
+  /** binary representation of the Identifier. */
   def bytes: Array[Byte]
 
-  /** A human readable String representation of the Identifier. */
+  /** human readable String representation of the Identifier. */
   def asString: String
 
   /** Length of the identifier in bytes.

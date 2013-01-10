@@ -2,6 +2,19 @@ package net.nicktelford.ident.uuid
 
 import net.nicktelford.ident.Identifier
 
+object UUID {
+
+  /** Creates a UUID from the specified bytes. */
+  def apply[A <: UUID : UUIDFactory](bytes: Array[Byte]): Option[A] = {
+    implicitly[UUIDFactory[A]].from(bytes)
+  }
+
+  /** Creates a UUID from the specified MSB and LSB. */
+  def apply[A <: UUID : UUIDFactory](msb: Long, lsb: Long): Option[A] = {
+    implicitly[UUIDFactory[A]].from(msb, lsb)
+  }
+}
+
 /** Base trait for a UUID. */
 trait UUID extends Identifier[UUID] {
 

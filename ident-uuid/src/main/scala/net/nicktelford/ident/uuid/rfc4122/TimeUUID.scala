@@ -1,39 +1,49 @@
 package net.nicktelford.ident.uuid.rfc4122
 
 import java.util.concurrent.TimeUnit
-import net.nicktelford.ident.timing.Time
 import net.nicktelford.ident.uuid._
+import util.Random
 
 /** Companion object for generating TimeUUIDs. */
-object TimeUUID extends UUIDFactory[TimeUUID] with RFC4122Factory {
+object TimeUUID extends RFC4122Factory[TimeUUID] {
 
   /** @see RFC4122Factory.version */
   val version: Short = 1
 
   /** @see UUIDFactory.max */
-  val MaxValue: TimeUUID = TimeUUID(encodeMSB(-1), encodeLSB(-1, -1))
+  val MaxValue: TimeUUID = new TimeUUID(encodeMSB(-1), encodeLSB(-1, -1))
 
   /** @see UUIDUUIDFactory.min */
-  val MinValue: TimeUUID = TimeUUID(encodeMSB(0), encodeLSB(0, 0))
+  val MinValue: TimeUUID = new TimeUUID(encodeMSB(0), encodeLSB(0, 0))
 
   /** 100-ns offset of UNIX epoch from UUID epoch */
   private val EPOCH_OFFSET = 0x01B21DD213814000L
 
   /** Generates a UUID for a UNIX timestamp in arbitrary units. */
   def apply(timestamp: Long, unit: TimeUnit): TimeUUID = {
-    TimeUUID((unit.toNanos(timestamp) / 100).toLong - TimeUUID.EPOCH_OFFSET)
+    // TODO: use real clock sequence and node
+    // TODO: process ID for clock sequence?
+    TimeUUID(timestamp, unit, Random.nextInt, Random.nextLong)
+  }
+
+  /** Generates a UUID for a UNIX timestamp in arbitrary units. */
+  def apply(timestamp: Long, unit: TimeUnit, clock: Int, node: Long): TimeUUID = {
+    TimeUUID(
+      (unit.toNanos(timestamp) / 100).toLong - TimeUUID.EPOCH_OFFSET,
+      clock,
+      node
+    )
   }
   
   /** Generates a UUID for a UUID timestamp. */
-  def apply(nanos: Long): TimeUUID = {
-    // TODO: compute LSB from a real clock sequence and node address
-    // TODO: idea: use current process ID (PID) for clock sequence?
-    TimeUUID(encodeMSB(nanos), randomLSB)
+  def apply(nanos: Long, clock: Int, node: Long): TimeUUID = {
+    new TimeUUID(encodeMSB(nanos), encodeLSB(clock, node))
   }
-  
+
   /** Generates a TimeUUID derived from the current time. */
-  def apply: TimeUUID = {
-    TimeUUID(Time.currentTimeNanos, TimeUnit.NANOSECONDS)
+  def apply(): TimeUUID = {
+    // TODO: replace with finer-grained clock
+    TimeUUID(System.currentTimeMillis, TimeUnit.MILLISECONDS)
   }
 }
 
