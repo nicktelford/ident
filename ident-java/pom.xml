@@ -30,8 +30,6 @@
             <name>Nick Telford</name>
             <email>nick.telford@gmail.com</email>
             <url>http://nicktelford.net</url>
-            <organization>DataSift Inc.</organization>
-            <organizationUrl>http://datasift.com</organizationUrl>
             <roles>
                 <role>architect</role>
                 <role>developer</role>
@@ -39,11 +37,6 @@
             <timezone>0</timezone>
         </developer>
     </developers>
-
-    <organization>
-        <name>DataSift Inc.</name>
-        <url>http://datasift.com/</url>
-    </organization>
 
     <issueManagement>
         <system>github</system>
