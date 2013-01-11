@@ -1,7 +1,7 @@
 package net.nicktelford.ident.rfc4122;
 
-import net.nicktelford.ident.Clock;
-import net.nicktelford.ident.clocks.SystemClock;
+import net.nicktelford.timing.clocks.Clock;
+import net.nicktelford.timing.clocks.SystemClock;
 
 import java.util.concurrent.TimeUnit;
 
@@ -64,11 +64,13 @@ public class TimeUUID extends RFC4122UUID {
     }
 
     public static TimeUUID create() {
-        return create(SystemClock.getInstance());
+        return create(SystemClock.defaultInstance);
     }
 
     public static TimeUUID create(final Clock clock) {
-        return fromUnixTime(clock.currentTimeNanos(), TimeUnit.NANOSECONDS);
+        // todo: improve clock precision
+        // todo: derive a UUID clock from the Clock API
+        return fromUnixTime(clock.currentTimeMillis(), TimeUnit.MILLISECONDS);
     }
 
     TimeUUID(final long msb, final long lsb) {
