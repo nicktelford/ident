@@ -38,9 +38,23 @@ public class Bytes {
         return result;
     }
 
+    // strips all non-hexadecimal characters from the given string
+    public static String hexOnly(final String s) {
+        int len = 0;
+        final char[] out = new char[s.length()];
+        final char[] chars = s.toCharArray();
+        for (int i = 0; i < s.length(); i++) {
+            final char c = chars[i];
+            if ((c > 47 && c < 58) || (c > 64 && c < 71) || (c > 96 && c < 103)) {
+                out[len++] = c;
+            }
+        }
+        return new String(out, 0, len);
+    }
+
     // todo: make this nicer
     public static byte[] fromHexadecimalString(final String s) {
-        String hex = s.replaceAll("[^0-9a-fA-F]", "");
+        String hex = hexOnly(s);
 
         // left-pad with a zero
         if (hex.length() % 2 != 0) {
